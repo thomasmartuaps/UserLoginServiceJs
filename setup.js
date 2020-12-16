@@ -1,5 +1,6 @@
 const { MongoClient } = require("mongodb");
-const { hashString } = require("./helpers/bcrypt")
+const { hashString } = require("./helpers/bcrypt");
+const userModel = require("./models/User");
 require('dotenv').config();
 
 // Connection URI
@@ -23,14 +24,20 @@ async function run() {
     if(firstUser) {
       console.log("Already set up")
     } else {
-      const createFirstUser = await users.insertOne({
-        email: process.env.FIRST_USER,
-        pass: hashString(process.env.USER_PASSWORD)
-      }).then((res) => {
+      // Add first user to database
+      const createFirstUser = await users.insertOne(
+        // Use the model to make sure the first user conforms to validation standards
+        userModel(process.env.FIRST_USER, process.env.USER_PASSWORD)
+      ).then((res) => {
+        console.log("Inserting first user...")
         return res.ops
       })
         .catch(e => {
-          return e
+          console.log("Error!")
+          return {
+            e,
+            error: true
+          }
         })
 
       console.log(createFirstUser);
