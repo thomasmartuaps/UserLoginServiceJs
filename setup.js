@@ -1,4 +1,5 @@
 const { MongoClient } = require("mongodb");
+const { hashString } = require("./helpers/bcrypt")
 require('dotenv').config();
 
 // Connection URI
@@ -17,10 +18,25 @@ async function run() {
 
     const users = database.collection("users");
 
-    // Check if db exists
-    const checkUsers = await users.find();
+    // Check if first user exists
+    const firstUser = await users.findOne({ email: process.env.FIRST_USER });
+    if(firstUser) {
+      console.log("Already set up")
+    } else {
+      const createFirstUser = await users.insertOne({
+        email: process.env.FIRST_USER,
+        pass: hashString(process.env.USER_PASSWORD)
+      }).then((res) => {
+        return res.ops
+      })
+        .catch(e => {
+          return e
+        })
+
+      console.log(createFirstUser);
+      console.log("Set up first user.")
+    }
     console.log("Connected successfully to server");
-    console.log(checkUsers);
     
   } finally {
     // Ensures that the client will close when you finish/error
