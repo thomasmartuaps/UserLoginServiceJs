@@ -1,19 +1,19 @@
-const { MongoClient } = require("mongodb");
+const mongoose = require("mongoose");
+const schema = mongoose.Schema;
 const { hashString } = require("../helpers/bcrypt");
 
-function userModel (email, password) {
-    if (password.length >= 4) {
-        return {
-            email: email,
-            pass: hashString(password)
-        };
+const UserSchema = new schema({
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+        match: ['@', "Invalid email."]
+    },
+    pass: {
+        type: String,
+        required: true,
+        minlength: [4, "Password require at least 4 characters."]
     }
-    else {
-        throw {
-            message: "Password must be at least 4 characters."
-        }
-    }
-    // Add validations here
-}
+})
 
-module.exports = userModel;
+module.exports = User = mongoose.model("user", UserSchema);
