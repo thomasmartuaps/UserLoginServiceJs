@@ -1,5 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const routes = require("./routes");
 require('dotenv').config();
 
 mongoose.connect(`${process.env.MONGOURI}/${process.env.DB_NAME}`, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -16,5 +17,7 @@ const app = express();
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+app.use(routes);
 
 app.listen(PORT, () => console.log(`Listening to port ${PORT}`));

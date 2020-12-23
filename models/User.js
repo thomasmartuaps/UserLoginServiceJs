@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const schema = mongoose.Schema;
 const { hashString } = require("../helpers/bcrypt");
+require('dotenv').config();
+
+const connection = mongoose.createConnection(`${process.env.MONGOURI}/${process.env.DB_NAME}`)
 
 const UserSchema = new schema({
     username: {
@@ -16,4 +19,4 @@ const UserSchema = new schema({
     }
 })
 
-module.exports = User = mongoose.model("user", UserSchema);
+module.exports = User = connection.model("user", UserSchema);
