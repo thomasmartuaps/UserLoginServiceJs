@@ -1,12 +1,19 @@
 const User = require("../models/User");
 
 class Controller {
-    static register (email, password) {
+    static register (req, res) {
         User.create({
-            email: email,
-            pass: password,
+            email: req.body.email,
+            pass: req.body.password,
         })
-            .then(res => console.log("created."))
+            .then(result => res.status(200).json({
+                message: "Create success!",
+                data: result
+            }
+            ))
+            .catch(e => res.status(500).json({
+                error: e
+            }))
     }
 }
 
