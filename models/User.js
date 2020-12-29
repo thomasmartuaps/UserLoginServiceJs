@@ -1,16 +1,15 @@
 const mongoose = require("mongoose");
 const schema = mongoose.Schema;
-const { hashString } = require("../helpers/bcrypt");
 require('dotenv').config();
 
 const connection = mongoose.createConnection(`${process.env.MONGOURI}/${process.env.DB_NAME}`)
 
 const UserSchema = new schema({
-    username: {
+    email: {
         type: String,
         required: true,
         unique: true,
-        match: ['@', "Invalid email."]
+        // minlength: [3, "Email require at least 3 characters."]
     },
     pass: {
         type: String,
