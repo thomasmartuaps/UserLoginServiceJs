@@ -15,6 +15,10 @@ class Controller {
                 error: e
             }))
     }
+
+    static login (req, res) {
+        res.status(200).json({ message: "API under construction." })
+    }
 }
 
 module.exports = Controller;
