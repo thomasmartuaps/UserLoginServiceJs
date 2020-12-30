@@ -16,9 +16,13 @@ class Controller {
             }
             ))
             .catch(e => {
-                if(e.keyValue.email === req.body.email) {
+                if(e.name === "MongoError" && e.code === 11000) {
                     res.status(400).json({
                         errMsg: "Email already exists."
+                    })
+                } else if(e.errors.email) {
+                    res.status(400).json({
+                        errMsg: e.errors.email.message
                     })
                 } else {
                     res.status(500).json({
