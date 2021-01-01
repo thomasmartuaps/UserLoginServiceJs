@@ -1,5 +1,6 @@
 const User = require("../models/User");
-const { hashString } = require("../helpers/bcrypt");
+const { hashString, checkString } = require("../helpers/bcrypt");
+const { generateToken } = require("../helpers/jwt");
 
 class Controller {
     static register (req, res) {
@@ -12,7 +13,10 @@ class Controller {
         })
             .then(result => res.status(200).json({
                 message: "Create success!",
-                data: result
+                token: generateToken({
+                    id: result._id,
+                    email: result.email
+                })
             }
             ))
             .catch(e => {
@@ -33,7 +37,34 @@ class Controller {
     }
 
     static login (req, res) {
-        res.status(200).json({ message: "API under construction." })
+        User.findOne({ email: req.body.email })
+            .then(result => {
+                if (result) {
+                    if (checkString(req.body.password, result.pass)) {
+                        res.status(200).json({
+                            message: "Login success!",
+                            token: generateToken({
+                                id: result._id,
+                                email: result.email
+                            })
+                        })
+                    } else {
+                        res.status(400).json({
+                            message: "Wrong email or password."
+                        })
+                    }
+                } else {
+                    res.status(400).json({
+                        message: "Wrong email or password."
+                    })
+                };
+            })
+            .catch(e => {
+                console.log(e)
+                res.status(500).json({
+                    error: e
+                })
+            })
     }
 }
 
