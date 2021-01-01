@@ -8,5 +8,6 @@ routes.get("/", (req, res) => {
     })
 });
 routes.post("/register", Controller.register);
+routes.post("/login", Controller.login);
 
 module.exports = routes;
