@@ -9,5 +9,6 @@ routes.get("/", (req, res) => {
 });
 routes.post("/register", Controller.register);
 routes.post("/login", Controller.login);
+routes.get("/showall", Controller.show);
 
 module.exports = routes;

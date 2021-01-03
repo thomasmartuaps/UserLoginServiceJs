@@ -66,6 +66,19 @@ class Controller {
                 })
             })
     }
+
+    static show(req, res) {
+        User.find()
+            .select("-pass")
+            .then(result => {
+                res.status(200).json(result)
+            })
+            .catch(e => {
+                res.status(500).json({
+                    error: e
+                })
+            })
+    }
 }
 
 module.exports = Controller;
