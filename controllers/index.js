@@ -70,6 +70,7 @@ class Controller {
     static show(req, res) {
         User.find()
             .select("-pass")
+            .select("-_id")
             .then(result => {
                 res.status(200).json(result)
             })
